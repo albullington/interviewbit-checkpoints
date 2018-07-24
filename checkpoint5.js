@@ -3,6 +3,9 @@ module.exports = {
   //return a array of array of integers
      permute : function(A){
    var results = [];
+   var length = A.length;
+   var tracker = Array(length);
+   var currentItems = Array(length);
  
    var findUniqueCombos = function(results, combo) {
      var isDuplicate = false;
@@ -15,21 +18,24 @@ module.exports = {
      return isDuplicate;
    }
  
-   var getCombos = function(array, combo) {
-     if (array.length === 0) {
-       if (!findUniqueCombos(results, combo)) {
-         results.push(combo);
-       }
-     } else {
-       for (var i = 0; i < array.length; i++) {
-         var first = array.slice();
-         var next = first.splice(i, 1);
-         getCombos(first.slice(), combo.concat(next))
+   var backtracking = function(position) {
+     if (position === length) {
+       if (!findUniqueCombos(results, currentItems.slice())) {
+         return results.push(currentItems.slice());
        }
      }
-   }
-   getCombos(A, []);
+     for (var i = 0; i < length; ++i) {
+       if (!tracker[i]) { 
+         tracker[i] = true;
+         currentItems[position] = A[i];
+         backtracking(position + 1);
+         tracker[i] = false;
+       }
+     }
+   };
+   
+   backtracking(0);
    return results;
-     }
+   }
  };
  
